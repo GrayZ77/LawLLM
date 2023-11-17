@@ -1,4 +1,5 @@
 import json
+from io import StringIO
 import torch
 import streamlit as st
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -43,6 +44,26 @@ def init_chat_history():
 def main():
     model, tokenizer = init_model()
     messages = init_chat_history()
+
+    uploaded_file = st.file_uploader("Choose a file")
+    if uploaded_file is not None:
+        # To convert to a string based IO:
+        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        # To read file as string:
+        string_data = stringio.read()
+        string_data = "请对以下内容中涉及的法律知识进行分析：\n" + string_data
+        messages.append({"role": "user", "content": string_data})
+        print(f"[user] {string_data}", flush=True)
+        with st.chat_message("assistant", avatar="🤖"):
+            placeholder = st.empty()
+            for response in model.chat(tokenizer, messages, stream=True):
+                placeholder.markdown(response)
+                if torch.backends.mps.is_available():
+                    torch.mps.empty_cache()
+        messages.append({"role": "assistant", "content": response})
+        print(json.dumps(messages, ensure_ascii=False), flush=True)
+        st.button("清空对话", on_click=clear_chat_history)
+        
     if prompt := st.chat_input("Shift + Enter 换行，Enter 发送"):
         with st.chat_message("user", avatar="🙋‍♂️"):
             st.markdown(prompt)
