@@ -4,6 +4,7 @@ import platform
 from colorama import Fore, Style
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.generation.utils import GenerationConfig
+import test
 
 
 def init_model():
@@ -17,6 +18,7 @@ def init_model():
         model_path, use_fast=False, trust_remote_code=True, local_files_only = True
     )
     return model, tokenizer
+
 
 
 def clear_screen():

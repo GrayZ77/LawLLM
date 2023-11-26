@@ -43,15 +43,17 @@ def init_chat_history():
 
 def main():
     model, tokenizer = init_model()
-    messages = init_chat_history()
+    st.text("上传文件进行内容总结：")
 
     uploaded_file = st.file_uploader("Choose a file")
+    messages = init_chat_history()
+    
     if uploaded_file is not None:
         # To convert to a string based IO:
         stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
         # To read file as string:
         string_data = stringio.read()
-        string_data = "请对以下内容中涉及的法律知识进行分析：\n" + string_data
+        string_data = "请对以下内容中涉及的法律知识进行总结括：\n" + string_data
         messages.append({"role": "user", "content": string_data})
         print(f"[user] {string_data}", flush=True)
         with st.chat_message("assistant", avatar="🤖"):
