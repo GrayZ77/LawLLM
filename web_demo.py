@@ -1,4 +1,6 @@
 import json
+import match
+from io import StringIO
 import torch
 import streamlit as st
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -43,9 +45,12 @@ def init_chat_history():
 def main():
     model, tokenizer = init_model()
     messages = init_chat_history()
+    
     if prompt := st.chat_input("Shift + Enter 换行，Enter 发送"):
         with st.chat_message("user", avatar="🙋‍♂️"):
             st.markdown(prompt)
+        result = match.quest(prompt)
+        prompt = "以下内容为参考：\n" + result + "请回答以下问题：\n" + prompt
         messages.append({"role": "user", "content": prompt})
         print(f"[user] {prompt}", flush=True)
         with st.chat_message("assistant", avatar="🤖"):
