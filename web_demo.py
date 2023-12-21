@@ -1,4 +1,5 @@
 import json
+import match
 from io import StringIO
 import torch
 import streamlit as st
@@ -43,32 +44,13 @@ def init_chat_history():
 
 def main():
     model, tokenizer = init_model()
-    st.text("上传文件进行内容总结：")
-
-    uploaded_file = st.file_uploader("Choose a file")
     messages = init_chat_history()
     
-    if uploaded_file is not None:
-        # To convert to a string based IO:
-        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        # To read file as string:
-        string_data = stringio.read()
-        string_data = "请对以下内容中涉及的法律知识进行总结括：\n" + string_data
-        messages.append({"role": "user", "content": string_data})
-        print(f"[user] {string_data}", flush=True)
-        with st.chat_message("assistant", avatar="🤖"):
-            placeholder = st.empty()
-            for response in model.chat(tokenizer, messages, stream=True):
-                placeholder.markdown(response)
-                if torch.backends.mps.is_available():
-                    torch.mps.empty_cache()
-        messages.append({"role": "assistant", "content": response})
-        print(json.dumps(messages, ensure_ascii=False), flush=True)
-        st.button("清空对话", on_click=clear_chat_history)
-        
     if prompt := st.chat_input("Shift + Enter 换行，Enter 发送"):
         with st.chat_message("user", avatar="🙋‍♂️"):
             st.markdown(prompt)
+        result = match.quest(prompt)
+        prompt = "以下内容为参考：\n" + result + "请回答以下问题：\n" + prompt
         messages.append({"role": "user", "content": prompt})
         print(f"[user] {prompt}", flush=True)
         with st.chat_message("assistant", avatar="🤖"):
