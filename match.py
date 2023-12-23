@@ -2,6 +2,7 @@ from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores.chroma import Chroma
+from langchain.prompts.chat import ChatMessagePromptTemplate
 import os
 
 embeddings = HuggingFaceEmbeddings(model_name="GanymedeNil/text2vec-large-chinese",
@@ -31,7 +32,8 @@ def quest(query):
     message = ''
     docs = db.similarity_search_by_vector(embedding_vector, k=3, fetch_k=10)
     for i, doc in enumerate(docs):
-        message = message + f"{i+1}. {doc.page_content}\n"
+        message = message + f"{i+1}. {doc.page_content}  \n\n"
+    
     return message
 
 if __name__ == "__main__":
