@@ -9,7 +9,7 @@ import test
 
 def init_model():
     print("Initializing model...")
-    model_path = "/root/DISC-LawLLM/data"
+    model_path = "/root/DISC-LawLLM/model"
     model = AutoModelForCausalLM.from_pretrained(
         model_path, torch_dtype=torch.float16, device_map="auto", trust_remote_code=True, local_files_only = True, offload_folder = "offload"
     )
