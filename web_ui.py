@@ -68,11 +68,11 @@ def main():
             icon = "github",
             url = "https://github.com/GrayZ77/LawLLM",
         )  
-    _match = st.sidebar.checkbox("开启法条匹配")
+    _match = st.sidebar.checkbox("开启法条检索")
            
 
     if _match:
-        _num = st.sidebar.slider("请选择匹配法条数", 1, 5, 3)
+        _num = st.sidebar.slider("请选择检索法条数", 1, 5, 3)
         if prompt := st.chat_input("Shift + Enter 换行，Enter 发送"):
             with st.chat_message("user", avatar="🙋‍♂️"):
                 st.markdown(prompt)

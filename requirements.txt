@@ -7,3 +7,5 @@ cpm_kernels
 sentencepiece
 streamlit
 transformers_stream_generator
+langchain
+streamlit-extras
