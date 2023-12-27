@@ -60,6 +60,8 @@ def init_model():
 streamlit run web_ui.py --server.port 8888
 ```
 
+请注意，如果是位于中国大陆的用户，请在运行本项目前使用vpn等工具，否则可能无法连接至`huggingface.io`，导致本项目的embedding无法使用
+
 
 
 ## 创建本地向量数据库
