@@ -22,11 +22,11 @@ def store_vector(docs, embeddings, persist_dirctory="VectorDataBase"):
 
 def quest(query, num = 3):
     embedding_vector = embeddings.embed_query(query)
-    if not os.path.exists("/root/DISC-LawLLM/VectorDataBase"):
+    if not os.path.exists("VectorDataBase"):
         documents = load_documents()
         db = store_vector(documents, embeddings)
     else:
-        db = FAISS.load_local("/root/DISC-LawLLM/VectorDataBase", embeddings)
+        db = FAISS.load_local("VectorDataBase", embeddings)
     message = ''
     docs = db.max_marginal_relevance_search_by_vector(embedding_vector, k=num)
     for i, doc in enumerate(docs):
@@ -35,6 +35,6 @@ def quest(query, num = 3):
     return message
 
 if __name__ == "__main__":
-    print(quest(query = "上课睡觉犯法吗", num=5))
+    print(quest(query = "什么样的行为可以被称为垄断行为", num=5))
 
 

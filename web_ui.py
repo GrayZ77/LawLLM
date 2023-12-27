@@ -5,10 +5,16 @@ import torch
 import streamlit as st
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.generation.utils import GenerationConfig
+from streamlit_extras.mention import mention
 
 
-st.set_page_config(page_title="FudanDISC-LawLLM")
-st.title("FudanDISC-LawLLM🤖️")
+st.set_page_config(page_title="DISC-LawLLM")
+st.title("🦜LawLLM-With-LangChain")
+st.caption("🚀 A streamlit chatbot powered by DISC-LLM, running on Ubuntu-22.04")
+
+"""
+该问答系统以`LangChain`为基本框架，完成了向量数据库的构建与文本检索。更多有关`LangChain`的内容请访问[langchain-io.com](https://www.langchain-io.com/)
+"""
 
 @st.cache_resource()
 def init_model():
@@ -32,6 +38,8 @@ def init_chat_history():
     with st.chat_message("assistant", avatar="🤖"):
         st.markdown("您好，我是 DISC-LawLLM，很高兴为您服务💖")
 
+   
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
     
@@ -54,7 +62,14 @@ def init_chat_history():
 def main():
     model, tokenizer = init_model()
     messages, dialogs = init_chat_history()
-    _match = st.sidebar.checkbox("开启法条匹配")         
+    with st.sidebar:
+        mention(
+            label = "Source Code",
+            icon = "github",
+            url = "https://github.com/GrayZ77/LawLLM",
+        )  
+    _match = st.sidebar.checkbox("开启法条匹配")
+           
 
     if _match:
         _num = st.sidebar.slider("请选择匹配法条数", 1, 5, 3)
@@ -62,7 +77,7 @@ def main():
             with st.chat_message("user", avatar="🙋‍♂️"):
                 st.markdown(prompt)
             result = match.quest(prompt, num=_num)
-            question = f"以下内容为参考（仅作为参考，回答时不用严格遵守，回答的内容也不用局限于参考的内容）：\n{result}请详细回答下面的问题：\n{prompt}"
+            question = f"以下内容为参考（仅作为参考，回答时不用严格遵守，回答的内容也不用局限于参考的内容，回答时不需要提到依据了哪些法律）：\n{result}请详细回答下面的问题：\n{prompt}"
             dialogs.append({"role": "user", "content": prompt})
             messages.append({"role": "user", "content": question})
             print(f"[user] {question}", flush=True)
