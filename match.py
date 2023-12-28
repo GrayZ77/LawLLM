@@ -28,13 +28,13 @@ def quest(query, num = 3):
     else:
         db = FAISS.load_local("VectorDataBase", embeddings)
     message = ''
-    docs = db.max_marginal_relevance_search_by_vector(embedding_vector, k=num)
+    docs = db.similarity_search_by_vector(embedding_vector, k=num)
     for i, doc in enumerate(docs):
         message = message + f"{i+1}. {doc.page_content}  \n\n"
     
     return message
 
 if __name__ == "__main__":
-    print(quest(query = "什么样的行为可以被称为垄断行为", num=5))
+    print(quest(query = "我把小区的花全部摘光犯法吗", num=5))
 
 
